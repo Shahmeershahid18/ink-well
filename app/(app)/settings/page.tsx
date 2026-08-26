@@ -17,7 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function SettingsPage() {
   const { data: settings, isLoading } = useSettings()
-  const { data: reconciliation } = useReconciliation()
+  const recon = useReconciliation()
   const save = useSaveSettings()
 
   const [values, setValues] = React.useState({
@@ -206,27 +206,46 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <div className="px-4 pb-4">
-            <Alert variant={reconciliation && reconciliation.length === 0 ? 'ok' : 'danger'}>
-              {reconciliation && reconciliation.length === 0 ? <CircleCheck /> : <TriangleAlert />}
-              <AlertTitle>
-                {reconciliation && reconciliation.length === 0
-                  ? 'Everything reconciles'
-                  : `${reconciliation?.length ?? 0} item(s) out of balance`}
-              </AlertTitle>
-              <AlertDescription>
-                {reconciliation && reconciliation.length === 0 ? (
-                  'Stock figures and the append-only ledger agree exactly.'
-                ) : (
+            {/* Four distinct states — an unfinished check must never read as a failed one. */}
+            {recon.isPending ? (
+              <Alert>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <AlertTitle>Checking…</AlertTitle>
+                <AlertDescription>
+                  Summing the ledger against every stock figure.
+                </AlertDescription>
+              </Alert>
+            ) : recon.isError ? (
+              <Alert variant="warn">
+                <TriangleAlert />
+                <AlertTitle>Check could not run</AlertTitle>
+                <AlertDescription>
+                  The books are neither confirmed nor known to be wrong. Reload to try again.
+                </AlertDescription>
+              </Alert>
+            ) : recon.data.length === 0 ? (
+              <Alert variant="ok">
+                <CircleCheck />
+                <AlertTitle>Everything reconciles</AlertTitle>
+                <AlertDescription>
+                  Stock figures and the append-only ledger agree exactly.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <Alert variant="danger">
+                <TriangleAlert />
+                <AlertTitle>{recon.data.length} item(s) out of balance</AlertTitle>
+                <AlertDescription>
                   <ul className="mt-1 space-y-0.5">
-                    {reconciliation?.map((r) => (
+                    {recon.data.map((r) => (
                       <li key={r.id} className="num">
                         {r.name}: stock {num(r.current_stock_kg)} kg vs ledger {num(r.ledger_kg)} kg
                       </li>
                     ))}
                   </ul>
-                )}
-              </AlertDescription>
-            </Alert>
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
         </Card>
       </div>

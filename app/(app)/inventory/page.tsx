@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { CircleCheck, Download, TriangleAlert } from 'lucide-react'
+import { Download, TriangleAlert } from 'lucide-react'
 import { useMovements, useReconciliation } from '@/lib/queries/dashboard'
 import { useRawMaterials } from '@/lib/queries/materials'
 import { useInks } from '@/lib/queries/inks'
@@ -99,30 +99,20 @@ export default function InventoryPage() {
         }
       />
 
-      {reconciliation && (
-        <Alert
-          variant={reconciliation.length === 0 ? 'ok' : 'danger'}
-          className="mb-4"
-        >
-          {reconciliation.length === 0 ? <CircleCheck /> : <TriangleAlert />}
-          <AlertTitle>
-            {reconciliation.length === 0
-              ? 'Ledger reconciles with stock'
-              : `${reconciliation.length} item(s) out of balance`}
-          </AlertTitle>
+      {/* Silent while the books balance — this only speaks up when they don't. */}
+      {reconciliation && reconciliation.length > 0 && (
+        <Alert variant="danger" className="mb-4">
+          <TriangleAlert />
+          <AlertTitle>{reconciliation.length} item(s) out of balance</AlertTitle>
           <AlertDescription>
-            {reconciliation.length === 0 ? (
-              'For every item, the sum of all movements equals the current stock figure.'
-            ) : (
-              <ul className="mt-1 space-y-0.5">
-                {reconciliation.map((r) => (
-                  <li key={r.id} className="num">
-                    {r.name}: stock says {num(r.current_stock_kg)} kg, ledger says{' '}
-                    {num(r.ledger_kg)} kg (difference {num(r.difference_kg)} kg)
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul className="mt-1 space-y-0.5">
+              {reconciliation.map((r) => (
+                <li key={r.id} className="num">
+                  {r.name}: stock says {num(r.current_stock_kg)} kg, ledger says{' '}
+                  {num(r.ledger_kg)} kg (difference {num(r.difference_kg)} kg)
+                </li>
+              ))}
+            </ul>
           </AlertDescription>
         </Alert>
       )}
