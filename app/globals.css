@@ -1,0 +1,296 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Neutral zinc chrome. Colour carries meaning and nothing else:
+  --ok profit / healthy stock · --warn below reorder · --danger out of stock / loss.
+*/
+:root {
+  --radius: 0.5rem;
+
+  --background: #ffffff;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
+  --destructive-foreground: #fafafa;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #a1a1aa;
+
+  /* brand — the logo gradient, reused by marketing surfaces */
+  --brand-from: #4338ca;
+  --brand-to: #7c3aed;
+
+  --ok: #16a34a;
+  --ok-soft: #dcfce7;
+  --warn: #d97706;
+  --warn-soft: #fef3c7;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+
+  /*
+    Series colours are categorical, not semantic — they identify a slice, they do
+    not judge it. Validated for CVD separation and contrast against both surfaces;
+    keep the slot order if you add a series.
+  */
+  --seg-material: #2a78d6;
+  --seg-labor: #eb6834;
+  --seg-overhead: #1baf7a;
+  --seg-packaging: #eda100;
+  --seg-margin: #e87ba4;
+
+  --chart-revenue: #7c3aed;   /* the logo purple */
+  --chart-purchases: #eb6834;
+  --chart-profit: #1baf7a;
+  --chart-grid: #e4e4e7;
+
+  --sidebar-width: 240px;
+  --content-max: 1400px;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #111113;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #52525b;
+
+  --brand-from: #6366f1;
+  --brand-to: #a855f7;
+
+  --ok: #4ade80;
+  --ok-soft: #052e16;
+  --warn: #fbbf24;
+  --warn-soft: #2a1c04;
+  --danger: #f87171;
+  --danger-soft: #2b0d0d;
+
+  /* The same hues, re-stepped for the dark surface — not an automatic flip. */
+  --seg-material: #3987e5;
+  --seg-labor: #d95926;
+  --seg-overhead: #199e70;
+  --seg-packaging: #c98500;
+  --seg-margin: #d55181;
+
+  --chart-revenue: #a855f7;   /* the logo purple, re-stepped for dark */
+  --chart-purchases: #d95926;
+  --chart-profit: #199e70;
+  --chart-grid: #27272a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    font-size: 14px;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Every number in the app lines up in its column. */
+  .num,
+  th.num,
+  td.num,
+  input[type="number"] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+  /* Number inputs without the spinner clutter */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  ::selection {
+    background: var(--accent);
+  }
+}
+
+@layer utilities {
+  .text-ok { color: var(--ok); }
+  .text-warn { color: var(--warn); }
+  .text-danger { color: var(--danger); }
+  .bg-ok-soft { background-color: var(--ok-soft); }
+  .bg-warn-soft { background-color: var(--warn-soft); }
+  .bg-danger-soft { background-color: var(--danger-soft); }
+  .content-shell {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    width: 100%;
+  }
+}
+
+/* ─────────────── MOTION ───────────────
+   Marketing surfaces only (landing, login). The app itself stays still — an
+   operator entering forty purchase lines does not want anything sliding about.
+*/
+
+@keyframes inkwell-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes inkwell-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes inkwell-draw {
+  from { stroke-dashoffset: var(--dash, 400); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes inkwell-flow {
+  from { stroke-dashoffset: 24; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@layer utilities {
+  /*
+    Visible by default. JS marks elements 'pending' before observing them, so if
+    the observer never runs — no script, print, a full-page capture — the content
+    is simply there rather than stuck at zero opacity.
+  */
+  .reveal[data-reveal='pending'] {
+    opacity: 0;
+  }
+  .reveal[data-visible='true'] {
+    animation: inkwell-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  .animate-rise {
+    animation: inkwell-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+  .animate-fade {
+    animation: inkwell-fade 0.8s ease-out both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+  .animate-draw {
+    stroke-dasharray: var(--dash, 400);
+    animation: inkwell-draw 1.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+  .animate-flow {
+    stroke-dasharray: 6 6;
+    animation: inkwell-flow 1.1s linear infinite;
+  }
+
+  /* The ink wash behind the hero and the login panel. */
+  .ink-wash {
+    background-image:
+      radial-gradient(60% 55% at 18% 12%, color-mix(in oklab, var(--brand-from) 26%, transparent), transparent 70%),
+      radial-gradient(55% 50% at 85% 25%, color-mix(in oklab, var(--brand-to) 22%, transparent), transparent 70%),
+      radial-gradient(70% 60% at 50% 100%, color-mix(in oklab, var(--brand-to) 14%, transparent), transparent 70%);
+  }
+
+  .grid-fade {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal[data-visible='true'],
+  .animate-rise,
+  .animate-fade,
+  .animate-draw,
+  .animate-flow {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbars that don't shout */
+@media (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; color: #000; font-size: 12px; }
+  .print-page { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+  @page { margin: 14mm; }
+}
