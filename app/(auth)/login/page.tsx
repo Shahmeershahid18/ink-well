@@ -51,11 +51,9 @@ function LoginForm() {
       setPending(false)
       const message = authError.message.toLowerCase()
       setError(
-        message.includes('invalid')
-          ? "That email and password don't match an account."
-          : message.includes('confirm')
-            ? 'That account has not been confirmed yet. Confirm it from the Supabase dashboard, then try again.'
-            : authError.message,
+        message.includes('confirm')
+          ? 'That account is not active yet. Contact your administrator.'
+          : "That email and password don't match an account.",
       )
       return
     }
@@ -144,10 +142,6 @@ function LoginForm() {
           </>
         )}
       </Button>
-
-      <p className="text-center text-xs text-[var(--muted-foreground)]">
-        Accounts are created by the owner in Supabase — there is no public sign-up.
-      </p>
     </form>
   )
 }
